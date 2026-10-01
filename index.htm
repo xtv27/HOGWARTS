@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="ru" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hogwarts | Магическая Вселенная</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;800&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        'cinzel': ['Cinzel', 'serif'],
+                        'inter': ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        'magic-gold': '#d4af37',
+                        'magic-gold-light': '#f3e5ab',
+                        'magic-dark': '#0a0a0e',
+                        'gryffindor': '#740001',
+                        'slytherin': '#1a472a',
+                        'ravenclaw': '#0e1a40',
+                        'hufflepuff': '#eeb939',
+                    },
+                    boxShadow: {
+                        'glow': '0 0 20px rgba(212, 175, 55, 0.5)',
+                        'glow-lg': '0 0 40px rgba(212, 175, 55, 0.6)',
+                        'glass': '0 8px 32px 0 rgba(0, 0, 0, 0.37)',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background-color: #050508;
+            color: #ffffff;
+            overflow-x: hidden;
+        }
+
+        /* Glassmorphism utility */
+        .glass {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .glass-card {
+            background: linear-gradient(135deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.01) 100%);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            transition: transform 0.4s ease, box-shadow 0.4s ease, border-color 0.4s ease;
+        }
+
+        .glass-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.5), inset 0 0 20px rgba(212, 175, 55, 0.1);
+            border-color: rgba(212, 175, 55, 0.3);
+        }
+
+        /* Magical Text Gradient */
+        .text-gradient {
+            background: linear-gradient(to right, #f3e5ab, #d4af37, #aa801b);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #050508;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #d4af37;
+            border-radius: 4px;
+        }
+
+        /* Scroll Animations */
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s ease-out;
+        }
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Canvas Background */
+        #magic-particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body class="font-inter antialiased selection:bg-magic-gold selection:text-black">
+
+    <canvas id="magic-particles"></canvas>
+
+    <!-- Navigation -->
+    <nav class="fixed w-full z-50 glass border-b border-white/5 py-4 px-6 md:px-12 flex justify-between items-center transition-all duration-300" id="navbar">
+        <div class="font-cinzel text-xl md:text-2xl font-bold tracking-widest text-white flex items-center gap-2">
+            <svg class="w-6 h-6 text-magic-gold" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2L9.5 9.5L2 12L9.5 14.5L12 22L14.5 14.5L22 12L14.5 9.5L12 2Z"/></svg>
+            HOGWARTS
+        </div>
+        <a href="#enroll" class="hidden md:inline-block px-6 py-2 rounded-full border border-magic-gold/50 text-magic-gold text-sm uppercase tracking-wider hover:bg-magic-gold hover:text-black transition-all duration-300">
+            Поступить
+        </a>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="relative min-h-screen flex items-center justify-center pt-20 overflow-hidden">
+        <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-magic-gold/5 via-magic-dark/80 to-magic-dark -z-10"></div>
+        
+        <div class="container mx-auto px-6 relative z-10 text-center">
+            <h2 class="text-magic-gold text-sm md:text-base tracking-[0.3em] uppercase mb-4 opacity-80 reveal active">Добро пожаловать в мир магии</h2>
+            <h1 class="font-cinzel text-6xl md:text-8xl lg:text-9xl font-bold text-white mb-6 tracking-wider reveal active shadow-black drop-shadow-2xl">
+                HOGWARTS
+            </h1>
+            <p class="mt-6 text-lg md:text-2xl text-gray-300 max-w-3xl mx-auto font-light leading-relaxed reveal active" style="transition-delay: 0.2s;">
+                Легендарная вселенная Гарри Поттера открывает свои двери. Оставь мир маглов позади — пришло время стать настоящим волшебником и написать свою собственную историю.
+            </p>
+            
+            <div class="mt-12 reveal active" style="transition-delay: 0.4s;">
+                <a href="#explore" class="group inline-flex items-center gap-3 text-white/70 hover:text-magic-gold transition-colors duration-300">
+                    <span class="text-sm tracking-widest uppercase">Исследовать</span>
+                    <svg class="w-5 h-5 animate-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path></svg>
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- The Experience Section -->
+    <section id="explore" class="py-24 relative">
+        <div class="container mx-auto px-6 md:px-12">
+            <div class="text-center mb-16 reveal">
+                <h2 class="font-cinzel text-4xl md:text-5xl font-bold text-white mb-4">Твой путь волшебника</h2>
+                <div class="w-24 h-1 bg-gradient-to-r from-transparent via-magic-gold to-transparent mx-auto"></div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Sorting Hat -->
+                <div class="glass-card rounded-2xl p-8 reveal">
+                    <div class="w-14 h-14 rounded-full bg-magic-gold/10 flex items-center justify-center mb-6 text-magic-gold border border-magic-gold/20">
+                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 2l3 5h5l-4 4 1.5 5.5L12 14l-5.5 2.5L8 11l-4-4h5l3-5z"></path></svg>
+                    </div>
+                    <h3 class="font-cinzel text-2xl font-semibold mb-3">Распределение</h3>
+                    <p class="text-gray-400 text-sm leading-relaxed">
+                        Смелость, хитрость, мудрость или верность? Древняя Распределяющая Шляпа заглянет в твою душу и определит твой факультет. Гриффиндор, Слизерин, Когтевран или Пуффендуй — где твоя настоящая семья?
+                    </p>
+                </div>
+
+                <!-- Classes -->
+                <div class="glass-card rounded-2xl p-8 reveal" style="transition-delay: 0.1s;">
+                    <div class="w-14 h-14 rounded-full bg-magic-gold/10 flex items-center justify-center mb-6 text-magic-gold border border-magic-gold/20">
+                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"></path></svg>
+                    </div>
+                    <h3 class="font-cinzel text-2xl font-semibold mb-3">Уроки Магии</h3>
+                    <p class="text-gray-400 text-sm leading-relaxed">
+                        Обучайся у величайших умов эпохи. Овладей искусством Зельеварения, научись защищаться от Темных Искусств, изучай древние Руны и приручай фантастических тварей на Уходе за магическими существами.
+                    </p>
+                </div>
+
+                <!-- Quidditch -->
+                <div class="glass-card rounded-2xl p-8 reveal" style="transition-delay: 0.2s;">
+                    <div class="w-14 h-14 rounded-full bg-magic-gold/10 flex items-center justify-center mb-6 text-magic-gold border border-magic-gold/20">
+                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    </div>
+                    <h3 class="font-cinzel text-2xl font-semibold mb-3">Квиддич</h3>
+                    <p class="text-gray-400 text-sm leading-relaxed">
+                        Оседлай свой "Нимбус" и взмой в небеса. Стань охотником, забивающим квоффл, вратарем, отбивалой или ловцом, от которого зависит исход матча. Почувствуй адреналин главного спорта магов!
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section id="enroll" class="py-32 relative flex items-center justify-center overflow-hidden">
+        <!-- Abstract glowing background element for CTA -->
+        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-3/4 h-3/4 bg-magic-gold/5 blur-[120px] rounded-full pointer-events-none"></div>
+        
+        <div class="relative z-10 glass-card mx-6 md:mx-auto max-w-4xl p-12 md:p-20 rounded-3xl text-center border-magic-gold/20 shadow-glow">
+            
+            <h2 class="font-cinzel text-5xl md:text-7xl font-bold mb-6 text-white tracking-wider reveal">
+                ТЫ ГОТОВ?
+            </h2>
+            
+            <p class="text-xl md:text-2xl text-gray-300 font-light mb-12 max-w-2xl mx-auto reveal" style="transition-delay: 0.1s;">
+                Письмо уже летит к тебе с совой. Не упусти свой шанс стать частью волшебного мира.
+            </p>
+
+            <div class="reveal" style="transition-delay: 0.2s;">
+                <div class="inline-block relative group cursor-pointer">
+                    <!-- Glowing aura behind button -->
+                    <div class="absolute -inset-1 bg-gradient-to-r from-magic-gold via-yellow-200 to-magic-gold rounded-xl blur opacity-60 group-hover:opacity-100 transition duration-500 animate-pulse"></div>
+                    
+                    <!-- Main Button -->
+                    <div class="relative bg-black px-8 py-5 md:px-16 md:py-6 rounded-xl border border-magic-gold/50 flex items-center justify-center transform group-hover:scale-[1.02] transition-all duration-300">
+                        <span class="font-cinzel text-2xl md:text-4xl font-bold text-gradient whitespace-nowrap tracking-wide">
+                            СТАРТ НАБОРА 5 ОКТЯБРЯ !
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="border-t border-white/5 py-8 text-center text-sm text-gray-600 glass relative z-10">
+        <p>&copy; 2026 Hogwarts School of Witchcraft and Wizardry. Magic awaits.</p>
+    </footer>
+
+    <script>
+        // 1. Scroll Reveal Animation Logic
+        function reveal() {
+            var reveals = document.querySelectorAll(".reveal");
+            for (var i = 0; i < reveals.length; i++) {
+                var windowHeight = window.innerHeight;
+                var elementTop = reveals[i].getBoundingClientRect().top;
+                var elementVisible = 100;
+
+                if (elementTop < windowHeight - elementVisible) {
+                    reveals[i].classList.add("active");
+                }
+            }
+        }
+        window.addEventListener("scroll", reveal);
+        // Trigger once on load
+        reveal();
+
+        // Navbar scroll effect
+        window.addEventListener("scroll", function() {
+            const navbar = document.getElementById("navbar");
+            if (window.scrollY > 50) {
+                navbar.classList.add("bg-magic-dark/80");
+                navbar.classList.remove("glass");
+            } else {
+                navbar.classList.add("glass");
+                navbar.classList.remove("bg-magic-dark/80");
+            }
+        });
+
+        // 2. Modern Interactive Particle System (Magic Sparks)
+        const canvas = document.getElementById('magic-particles');
+        const ctx = canvas.getContext('2d');
+        
+        let width, height;
+        let particles = [];
+        let mouse = { x: null, y: null };
+
+        window.addEventListener('mousemove', (e) => {
+            mouse.x = e.x;
+            mouse.y = e.y;
+        });
+
+        window.addEventListener('mouseout', () => {
+            mouse.x = null;
+            mouse.y = null;
+        });
+
+        function resize() {
+            width = window.innerWidth;
+            height = window.innerHeight;
+            canvas.width = width;
+            canvas.height = height;
+        }
+
+        window.addEventListener('resize', resize);
+        resize();
+
+        class Particle {
+            constructor() {
+                this.x = Math.random() * width;
+                this.y = Math.random() * height;
+                this.size = Math.random() * 2 + 0.1;
+                this.speedX = Math.random() * 1 - 0.5;
+                this.speedY = Math.random() * 1 - 0.5;
+                // Gold/Blue modern magical colors
+                const colors = ['rgba(212, 175, 55, ', 'rgba(243, 229, 171, ', 'rgba(100, 150, 255, '];
+                this.color = colors[Math.floor(Math.random() * colors.length)];
+                this.alpha = Math.random() * 0.5 + 0.1;
+            }
+
+            update() {
+                this.x += this.speedX;
+                this.y += this.speedY;
+
+                // Mouse interaction - gentle push
+                if (mouse.x != null) {
+                    let dx = mouse.x - this.x;
+                    let dy = mouse.y - this.y;
+                    let distance = Math.sqrt(dx * dx + dy * dy);
+                    if (distance < 100) {
+                        this.x -= dx / 20;
+                        this.y -= dy / 20;
+                    }
+                }
+
+                // Wrap around edges
+                if (this.x > width) this.x = 0;
+                if (this.x < 0) this.x = width;
+                if (this.y > height) this.y = 0;
+                if (this.y < 0) this.y = height;
+            }
+
+            draw() {
+                ctx.fillStyle = this.color + this.alpha + ')';
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+
+        function initParticles() {
+            particles = [];
+            const numberOfParticles = (width * height) / 8000; // responsive density
+            for (let i = 0; i < numberOfParticles; i++) {
+                particles.push(new Particle());
+            }
+        }
+
+        function animateParticles() {
+            ctx.clearRect(0, 0, width, height);
+            
+            // Add slight glowing trail effect
+            ctx.fillStyle = 'rgba(5, 5, 8, 0.2)'; 
+            ctx.fillRect(0, 0, width, height);
+
+            for (let i = 0; i < particles.length; i++) {
+                particles[i].update();
+                particles[i].draw();
+            }
+            requestAnimationFrame(animateParticles);
+        }
+
+        initParticles();
+        animateParticles();
+    </script>
+</body>
+</html>
